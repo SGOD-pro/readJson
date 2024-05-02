@@ -1,14 +1,17 @@
-import express from 'express'
+import express from 'express';
 import multer from 'multer';
-import fs from 'fs'
-import cors from 'cors'
+import fs from 'fs';
+import cors from 'cors';
+
 const app = express();
 const upload = multer({ dest: 'uploads/' });
-app.use(cors())
+
+app.use(cors());
 
 app.get("/", (req, res) => {
     res.json({ message: "Express on Vercel" })
 });
+
 app.post('/api/readfile', upload.single('file'), (req, res) => {
     try {
         const filePath = req.file.path;
@@ -27,8 +30,11 @@ app.post('/api/readfile', upload.single('file'), (req, res) => {
         res.status(500).send('Error reading file');
     }
 });
-const port=3001
-app.listen(port, () => {
-    console.log('Server is running on port 3001');
-});
-export default app;
+
+export default (req, res) => {
+  if (req.method === 'POST') {
+    app(req, res);
+  } else {
+    res.status(405).send('Method Not Allowed');
+  }
+};
