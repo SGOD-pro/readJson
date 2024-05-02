@@ -5,9 +5,7 @@ import cors from 'cors'
 const app = express();
 const upload = multer({ dest: 'uploads/' });
 app.use(cors())
-app.listen(3001, () => {
-    console.log('Server is running on port 3001');
-});
+
 app.get("/", (req, res) => {
     res.json({ message: "Express on Vercel" })
 });
@@ -30,4 +28,6 @@ app.post('/api/readfile', upload.single('file'), (req, res) => {
     }
 });
 
-export default app;
+app.listen(3001, () => {
+    console.log('Server is running on port 3001');
+});
