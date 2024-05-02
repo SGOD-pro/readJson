@@ -1,26 +1,34 @@
-import express from 'express'
-import someDatabase from 'your-database-library'; // Replace with your database library
+import express from 'express';
+import multer from 'multer';
+import fs from 'fs';
+import cors from 'cors';
+
 const app = express();
-app.use(cors())
+const upload = multer({ dest: 'uploads/' });
+
+app.use(cors());
 
 app.get("/", (req, res) => {
     res.json({ message: "Express on Vercel" })
 });
 
-app.post('/api/readfile', async (req, res) => {
+app.post('/api/readfile', upload.single('file'), (req, res) => {
     try {
-        const fileData = await someDatabase.getData('your-data-key'); // Assuming you have a function to get data by key
+        const filePath = req.file.path;
+        const fileData = fs.readFileSync(filePath, 'utf8');
         const jsonData = JSON.parse(fileData);
+
+        fs.unlink(filePath, (err) => {
+            if (err) {
+                console.error('Error deleting file:', err);
+            }
+            console.log('File deleted successfully');
+        });
         res.json(jsonData);
     } catch (error) {
-        console.error('Error reading data:', error);
-        res.status(500).send('Error reading data');
+        console.error('Error reading file:', error);
+        res.status(500).send('Error reading file');
     }
-});
-
-const port = process.env.PORT || 3000; // Use a default port if environment variable is not set
-app.listen(port, () => {
-    console.log('Server is running');
 });
 
 export default app;
