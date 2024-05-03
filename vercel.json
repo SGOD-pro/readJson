@@ -3,12 +3,12 @@
 	"builds": [
 		{
 			"src": "index.js",
-			"use": "@vercel/node",
-			"env": {
-				"UPLOAD_DIR_PERMISSIONS": "755"
-			}
+			"use": "@vercel/node"
 		}
 	],
+  "env": {
+    "UPLOAD_DIR_PERMISSIONS": "755" 
+  },
 	"routes": [
 		{
 			"src": "/(.*)",
