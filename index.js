@@ -30,5 +30,7 @@ app.post('/api/readfile', upload.single('file'), (req, res) => {
         res.status(500).send('Error reading file');
     }
 });
-
+app.listen(3000,()=>{
+    console.log("Server started.");
+});
 export default app;
