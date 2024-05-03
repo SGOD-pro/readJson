@@ -9,21 +9,17 @@ const upload = multer({ dest: 'uploads/' });
 app.use(cors());
 
 app.get("/", (req, res) => {
-    res.json({ message: "Express on Vercel" })
+    res.send(200).json({ message: "Express on Vercel" })
 });
 
-app.post('/api/readfile', upload.single('file'), (req, res) => {
+app.post('/api/readfile', upload.single('file'), async(req, res) => {
     try {
         const filePath = req.file.path;
         const fileData = fs.readFileSync(filePath, 'utf8');
         const jsonData = JSON.parse(fileData);
 
-        fs.unlink(filePath, (err) => {
-            if (err) {
-                console.error('Error deleting file:', err);
-            }
-            console.log('File deleted successfully');
-        });
+        await fs.promises.unlink(filePath); // Or use a promise-based approach
+
         res.json(jsonData);
     } catch (error) {
         console.error('Error reading file:', error);
